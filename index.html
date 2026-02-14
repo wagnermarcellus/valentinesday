@@ -7,6 +7,50 @@
 <link rel="icon" type="image/jpg" href="./img/6.jpg">
 
 <style>
+/* ===== OVERLAY PLAY PARA MOBILE ===== */
+.mobile-play-overlay {
+    display: none;
+    position: fixed;
+    z-index: 3000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(20,20,30,0.92);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-align: center;
+    transition: opacity 0.3s;
+}
+.mobile-play-overlay.active {
+    display: flex;
+}
+.mobile-play-overlay button {
+    margin-top: 32px;
+    font-size: 44px;
+    background: linear-gradient(90deg,#ff4d6d,#ffb199);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    box-shadow: 0 4px 32px #ff4d6d88;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.2s;
+}
+.mobile-play-overlay button:active {
+    background: linear-gradient(90deg,#ffb199,#ff4d6d);
+    transform: scale(0.95);
+}
 /* ===== SELEÇÃO DE TEXTO VERMELHO E BRANCO ===== */
 ::selection {
     background: #ff4d6d;
@@ -459,6 +503,13 @@ button:hover{
 </head>
 
 <body>
+<!-- Overlay Play para Mobile -->
+<div class="mobile-play-overlay" id="mobilePlayOverlay">
+    <div>Toque para ouvir a música<br><span style="font-size:16px;font-weight:400;opacity:0.8;">(O navegador bloqueia autoplay no celular)</span>
+        <br>
+        <button id="mobilePlayBtn">▶️</button>
+    </div>
+</div>
 <!-- Modal Galeria -->
 <div class="modal-gallery" id="modalGallery">
     <button class="close-btn" id="closeGalleryBtn">&times;</button>
@@ -652,6 +703,25 @@ eu vou continuar escolhendo você.<br>
 </div>
 
 <script>
+// Overlay de play para mobile
+function isMobile() {
+    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
+}
+const mobileOverlay = document.getElementById('mobilePlayOverlay');
+const mobilePlayBtn = document.getElementById('mobilePlayBtn');
+if(isMobile()) {
+    window.addEventListener('DOMContentLoaded',()=>{
+        setTimeout(()=>{
+            mobileOverlay.classList.add('active');
+        }, 400);
+    });
+    function startMusicMobile() {
+        audio.play();
+        mobileOverlay.classList.remove('active');
+    }
+    mobileOverlay.addEventListener('click', startMusicMobile);
+    mobilePlayBtn.addEventListener('click', startMusicMobile);
+}
 // Galeria de fotos
 const modalGallery = document.getElementById('modalGallery');
 const modalGalleryImg = document.getElementById('modalGalleryImg');
